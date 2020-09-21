@@ -21,16 +21,36 @@ func Slice(slice interface{}) {
 	switch p := slice.(type) {
 	case []bool:
 		Bools(p)
-	case []byte:
-		Bytes(p)
-	case []rune:
-		Runes(p)
-	case []int:
-		Ints(p)
+	case []uint8:
+		Uint8s(p)
+	case []uint16:
+		Uint16s(p)
+	case []uint32:
+		Uint32s(p)
+	case []uint64:
+		Uint64s(p)
+	case []int8:
+		Int8s(p)
+	case []int16:
+		Int16s(p)
+	case []int32:
+		Int32s(p)
+	case []int64:
+		Int64s(p)
 	case []float32:
 		Float32s(p)
 	case []float64:
 		Float64s(p)
+	case []complex64:
+		Complex64s(p)
+	case []complex128:
+		Complex128s(p)
+	case []uint:
+		Uints(p)
+	case []int:
+		Ints(p)
+	case []uintptr:
+		Uintptrs(p)
 	case []string:
 		Strings(p)
 	case Interface:
