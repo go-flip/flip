@@ -5,16 +5,30 @@ import (
 	"testing"
 )
 
+type myint int
+
+type myintSlice []myint
+
+func (p myintSlice) Len() int {
+	return len(p)
+}
+
+func (p myintSlice) Swap(i, j int) {
+	p[i], p[j] = p[j], p[i]
+}
+
 var flipTests = []struct {
 	in, out interface{}
 }{
-	{BoolSlice{false, true}, BoolSlice{true, false}},
-	{ByteSlice{'a', 'b', 'c'}, ByteSlice{'c', 'b', 'a'}},
-	{RuneSlice{'a', 'b', 'c'}, RuneSlice{'c', 'b', 'a'}},
-	{IntSlice{0, 1, 2}, IntSlice{2, 1, 0}},
-	{Float32Slice{3.14, 2.718, 1.618}, Float32Slice{1.618, 2.718, 3.14}},
-	{Float64Slice{3.14, 2.718, 1.618}, Float64Slice{1.618, 2.718, 3.14}},
-	{StringSlice{"Hello", "world", "!"}, StringSlice{"!", "world", "Hello"}},
+	{[]bool{false, true, true}, []bool{true, true, false}},
+	{[]byte{'a', 'b', 'c'}, []byte{'c', 'b', 'a'}},
+	{[]rune{'a', 'b', 'c'}, []rune{'c', 'b', 'a'}},
+	{[]int{0, 1, 2}, []int{2, 1, 0}},
+	{[]float32{3.14, 2.718, 1.618}, []float32{1.618, 2.718, 3.14}},
+	{[]float64{3.14, 2.718, 1.618}, []float64{1.618, 2.718, 3.14}},
+	{[]string{"Hello", "world", "!"}, []string{"!", "world", "Hello"}},
+	{myintSlice{0, 1, 2}, myintSlice{2, 1, 0}},
+	{[]myint{0, 1, 2}, []myint{2, 1, 0}},
 }
 
 func compare(t *testing.T, a, b interface{}) {
@@ -27,49 +41,29 @@ func TestFlip(t *testing.T) {
 	for _, tt := range flipTests {
 		Slice(tt.in)
 		compare(t, tt.in, tt.out)
-		Slice(tt.in)
-
-		switch in := tt.in.(type) {
-		case BoolSlice:
-			if out, ok := tt.out.(BoolSlice); ok {
-				Bools(in)
-				compare(t, in, out)
-			}
-		case ByteSlice:
-			if out, ok := tt.out.(ByteSlice); ok {
-				Bytes(in)
-				compare(t, in, out)
-			}
-		case RuneSlice:
-			if out, ok := tt.out.(RuneSlice); ok {
-				Runes(in)
-				compare(t, in, out)
-			}
-		case IntSlice:
-			if out, ok := tt.out.(IntSlice); ok {
-				Ints(in)
-				compare(t, in, out)
-			}
-		case Float32Slice:
-			if out, ok := tt.out.(Float32Slice); ok {
-				Float32s(in)
-				compare(t, in, out)
-			}
-		case Float64Slice:
-			if out, ok := tt.out.(Float64Slice); ok {
-				Float64s(in)
-				compare(t, in, out)
-			}
-		case StringSlice:
-			if out, ok := tt.out.(StringSlice); ok {
-				Strings(in)
-				compare(t, in, out)
-			}
-		}
 	}
 
 	out, in := "Hello, world!", "!dlrow ,olleH"
 	if String(in) != out {
 		t.Errorf("String(%q) = %q, want %q", in, String(in), out)
 	}
+}
+
+func BenchmarkFlip(b *testing.B) {
+	n := 1000
+	p := make([]myint, n)
+
+	b.Run("Flip", func(b *testing.B) {
+		b.ResetTimer()
+		for i := 0; i < b.N; i++ {
+			Flip(myintSlice(p))
+		}
+	})
+
+	b.Run("Slice", func(b *testing.B) {
+		b.ResetTimer()
+		for i := 0; i < b.N; i++ {
+			Slice(p)
+		}
+	})
 }

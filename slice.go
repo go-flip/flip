@@ -18,7 +18,26 @@ func (p reflectSlice) Swap(i, j int) {
 // Slice flips the provided slice. The function panics if the provided
 // interface is not a slice.
 func Slice(slice interface{}) {
-	rv := reflectValueOf(slice)
-	swap := reflectSwapper(slice)
-	Flip(reflectSlice{rv, swap})
+	switch p := slice.(type) {
+	case []bool:
+		Bools(p)
+	case []byte:
+		Bytes(p)
+	case []rune:
+		Runes(p)
+	case []int:
+		Ints(p)
+	case []float32:
+		Float32s(p)
+	case []float64:
+		Float64s(p)
+	case []string:
+		Strings(p)
+	case Interface:
+		Flip(p)
+	default:
+		rv := reflectValueOf(slice)
+		swap := reflectSwapper(slice)
+		Flip(reflectSlice{rv, swap})
+	}
 }
