@@ -1,4 +1,8 @@
 # flip
+[![buddy pipeline](https://app.buddy.works/kotone/flip/pipelines/pipeline/280627/badge.svg?token=78de2d527ff01f524ebf5cbeb752835d299dfa834590af212642b02673ecba52 "buddy pipeline")](https://app.buddy.works/kotone/flip/pipelines/pipeline/280627)
+[![Go Report Card](https://goreportcard.com/badge/github.com/go-flip/flip)](https://goreportcard.com/report/github.com/go-flip/flip)
+[![GoDoc](http://godoc.org/github.com/go-flip/flip?status.svg)](http://godoc.org/github.com/go-flip/flip)
+
 Routines for flipping slices in Go.
 
 ## Usage
